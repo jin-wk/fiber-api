@@ -2,9 +2,9 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/jin-wk/go-test/config"
-	"github.com/jin-wk/go-test/model"
-	"github.com/jin-wk/go-test/util"
+	"github.com/jin-wk/fiber-api/config"
+	"github.com/jin-wk/fiber-api/model"
+	"github.com/jin-wk/fiber-api/util"
 	"golang.org/x/crypto/bcrypt"
 )
 

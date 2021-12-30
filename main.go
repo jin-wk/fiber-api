@@ -4,8 +4,8 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/jin-wk/go-test/config"
-	"github.com/jin-wk/go-test/routes"
+	"github.com/jin-wk/fiber-api/config"
+	"github.com/jin-wk/fiber-api/routes"
 )
 
 // @title         Fiber-API

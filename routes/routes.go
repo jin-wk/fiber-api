@@ -5,9 +5,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/jin-wk/go-test/controller"
-	_ "github.com/jin-wk/go-test/docs"
-	"github.com/jin-wk/go-test/middleware"
+	"github.com/jin-wk/fiber-api/controller"
+	_ "github.com/jin-wk/fiber-api/docs"
+	"github.com/jin-wk/fiber-api/middleware"
 )
 
 func InitRoute(app *fiber.App) {
