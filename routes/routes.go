@@ -14,9 +14,7 @@ func InitRoute(app *fiber.App) {
 	app.Use(cors.New())
 	app.Get("/docs/*", fiberSwagger.Handler)
 
-	api := app.Group("/api")
-	api.Use(logger.New(middleware.LoggerConfig()))
-
+	api := app.Group("/api", logger.New(middleware.LoggerConfig()))
 	api.Post("/auth", controller.Register)
 	api.Get("/auth/:id", controller.Info)
 }

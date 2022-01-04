@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/jin-wk/fiber-api/config"
+	"github.com/jin-wk/fiber-api/database"
 	"github.com/jin-wk/fiber-api/routes"
 )
 
@@ -17,7 +17,7 @@ import (
 // @host          localhost:5000
 // @BasePath      /
 func main() {
-	if err := config.InitDatabase(); err != nil {
+	if err := database.InitDatabase(); err != nil {
 		log.Panic("Can't Connect Database: ", err.Error())
 	}
 	app := fiber.New(fiber.Config{})

@@ -1,20 +1,21 @@
-package config
+package database
 
 import (
 	"fmt"
 	"time"
 
+	"github.com/jin-wk/fiber-api/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 var (
 	DB       *gorm.DB
-	host     = Env("DB_HOST")
-	port     = Env("DB_PORT")
-	username = Env("DB_USERNAME")
-	password = Env("DB_PASSWORD")
-	database = Env("DB_DATABASE")
+	host     = config.Env("DB_HOST")
+	port     = config.Env("DB_PORT")
+	username = config.Env("DB_USERNAME")
+	password = config.Env("DB_PASSWORD")
+	database = config.Env("DB_DATABASE")
 )
 
 func InitDatabase() (err error) {
