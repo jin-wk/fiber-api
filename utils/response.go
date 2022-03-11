@@ -1,14 +1,12 @@
 package utils
 
-type Response struct {
+import "github.com/gofiber/fiber/v2"
+
+type Res struct {
 	Message string      `json:"message"`
 	Data    interface{} `json:"data"`
 }
 
-func Success(data interface{}) Response {
-	return Response{"success", data}
-}
-
-func Error(message string, data interface{}) Response {
-	return Response{message, data}
+func Response(c *fiber.Ctx, status int, message string, data interface{}) error {
+	return c.Status(status).JSON(Res{message, data})
 }

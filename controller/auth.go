@@ -18,28 +18,32 @@ import (
 // @Failure		500 {object} utils.Response
 // @Router		/api/auth [post]
 func Register(c *fiber.Ctx) error {
-	var user models.RegisterUser
-	var result models.User
+	user := new(models.User)
 
 	if err := c.BodyParser(&user); err != nil {
-		return c.Status(400).JSON(utils.Error("Bad Request", err))
+		return utils.Response(c, 400, "Bad Request", err)
 	}
 
-	err := utils.Validate(&user)
+	err := utils.Validate(user)
 	if err != nil {
-		return c.Status(400).JSON(utils.Error("Bad Request", err))
+		return utils.Response(c, 400, "Bad Request", err)
 	}
 
-	if database.DB.Where("email = ?", user.Email).First(&user).Error == nil {
-		return c.Status(409).JSON(utils.Error("Email already exists", nil))
+	if database.DB.Model(user).Where("email = ?", user.Email).First(&user).Error == nil {
+		return utils.Response(c, 409, "Email Already Exists", nil)
 	}
 
-	if database.DB.Select("Email", "Password", "Name").Create(&user).Error != nil {
-		return c.Status(500).JSON(utils.Error("Internal Server Error", nil))
+	if database.DB.Select("email", "password", "name").Create(&user).Error != nil {
+		return utils.Response(c, 500, "Internal Server Error", nil)
 	}
 
-	database.DB.First(&result, user.ID)
-	return c.Status(201).JSON(utils.Success(result))
+	return utils.Response(c, 201, "Created", models.ResponseUser{
+		ID:        user.ID,
+		Email:     user.Email,
+		Name:      user.Name,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+	})
 }
 
 // Info godoc
@@ -53,12 +57,12 @@ func Register(c *fiber.Ctx) error {
 // @Failure		404 {object} utils.Response
 // @Router		/api/auth/{id} [get]
 func Info(c *fiber.Ctx) error {
-	var user models.User
+	var user models.ResponseUser
 
 	result := database.DB.First(&user, c.Params("id"))
 	if result.Error != nil {
-		return c.Status(404).JSON(utils.Error("Not Found", nil))
+		return utils.Response(c, 404, "Not Found", nil)
 	}
 
-	return c.Status(200).JSON(utils.Success(&user))
+	return utils.Response(c, 200, "OK", &user)
 }
