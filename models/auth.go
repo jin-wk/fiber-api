@@ -14,7 +14,7 @@ type RegisterUser struct {
 	Name            string `json:"name" validate:"required"`
 }
 
-func (u *RegisterUser) TableName() string {
+func (RegisterUser) TableName() string {
 	return "users"
 }
 
@@ -32,7 +32,7 @@ type LoginUser struct {
 	Password string `json:"password" validate:"required"`
 }
 
-func (u *LoginUser) TableName() string {
+func (LoginUser) TableName() string {
 	return "users"
 }
 
@@ -42,4 +42,8 @@ type ResponseUser struct {
 	Name      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
+}
+
+func (ResponseUser) TableName() string {
+	return "users"
 }
