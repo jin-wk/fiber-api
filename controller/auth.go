@@ -1,7 +1,10 @@
 package controller
 
 import (
+	"time"
+
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/jin-wk/fiber-api/database"
 	"github.com/jin-wk/fiber-api/models"
 	"github.com/jin-wk/fiber-api/utils"
@@ -13,12 +16,12 @@ import (
 // @Tags		Auth
 // @Accept		application/json
 // @Produce		application/json
-// @Param		user body models.User true "user"
-// @Success		201 {object} utils.Response
-// @Failure		500 {object} utils.Response
-// @Router		/api/auth [post]
+// @Param		user body models.RegisterUser true "user"
+// @Success		201 {object} utils.Resp
+// @Failure		500 {object} utils.Resp
+// @Router		/api/auth/register [post]
 func Register(c *fiber.Ctx) error {
-	user := new(models.User)
+	user := new(models.RegisterUser)
 
 	if err := c.BodyParser(&user); err != nil {
 		return utils.Response(c, 400, "Bad Request", err)
@@ -37,12 +40,46 @@ func Register(c *fiber.Ctx) error {
 		return utils.Response(c, 500, "Internal Server Error", nil)
 	}
 
-	return utils.Response(c, 201, "Created", models.ResponseUser{
-		ID:        user.ID,
-		Email:     user.Email,
-		Name:      user.Name,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
+	return utils.Response(c, 201, "Created", &user)
+}
+
+// Login godoc
+// @Summary     Login
+// @Description Login User
+// @Tags		Auth
+// @Accept		application/json
+// @Produce		application/json
+// @Param		user body models.LoginUser true "user"
+// @Success		200 {object} utils.Resp
+// @Failure		500 {object} utils.Resp
+// @Router		/api/auth/login [post]
+func Login(c *fiber.Ctx) error {
+	var loginUser models.LoginUser
+	var responseUser models.ResponseUser
+
+	if err := c.BodyParser(&loginUser); err != nil {
+		return utils.Response(c, 400, "Bad Request", err)
+	}
+
+	if database.DB.Model(&loginUser).Where("email = ?", loginUser.Email).First(&responseUser).Error != nil {
+		return utils.Response(c, 401, "Email Not Exists", nil)
+	}
+
+	claims := jwt.MapClaims{
+		"name": responseUser.Name,
+		"exp":  time.Now().Add(time.Hour).Unix(),
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	t, err := token.SignedString([]byte("secret"))
+	if err != nil {
+		return utils.Response(c, 500, "Internal Server Error", nil)
+	}
+
+	return utils.Response(c, 200, "OK", map[string]interface{}{
+		"ID":    responseUser.ID,
+		"Email": responseUser.Email,
+		"Name":  responseUser.Name,
+		"token": t,
 	})
 }
 
@@ -53,8 +90,8 @@ func Register(c *fiber.Ctx) error {
 // @Accept		json
 // @Produce		json
 // @Param		id path int true "id"
-// @Success		200 {object} utils.Response
-// @Failure		404 {object} utils.Response
+// @Success		200 {object} utils.Resp
+// @Failure		404 {object} utils.Resp
 // @Router		/api/auth/{id} [get]
 func Info(c *fiber.Ctx) error {
 	var user models.ResponseUser

@@ -15,6 +15,7 @@ func InitRoute(app *fiber.App) {
 	app.Get("/docs/*", fiberSwagger.Handler)
 
 	api := app.Group("/api", logger.New(middleware.LoggerConfig()))
-	api.Post("/auth", controller.Register)
+	api.Post("/auth/register", controller.Register)
+	api.Post("/auth/login", controller.Login)
 	api.Get("/auth/:id", controller.Info)
 }
