@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/jin-wk/fiber-api/config"
 	"github.com/jin-wk/fiber-api/database"
 	"github.com/jin-wk/fiber-api/models"
 	"github.com/jin-wk/fiber-api/utils"
@@ -65,12 +66,13 @@ func Login(c *fiber.Ctx) error {
 		return utils.Response(c, 401, "Email Not Exists", nil)
 	}
 
+	duration, _ := time.ParseDuration(config.Env("JWT_EXPIRE_MIN") + "m")
 	claims := jwt.MapClaims{
 		"name": responseUser.Name,
-		"exp":  time.Now().Add(time.Hour).Unix(),
+		"exp":  time.Now().Add(duration).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	t, err := token.SignedString([]byte("secret"))
+	t, err := token.SignedString([]byte(config.Env("JWT_SECRET_KEY")))
 	if err != nil {
 		return utils.Response(c, 500, "Internal Server Error", nil)
 	}
@@ -87,11 +89,12 @@ func Login(c *fiber.Ctx) error {
 // @Summary     Info
 // @Description Get Info User
 // @Tags		Auth
-// @Accept		json
-// @Produce		json
+// @Accept		application/json
+// @Produce		application/json
 // @Param		id path int true "id"
 // @Success		200 {object} utils.Resp
 // @Failure		404 {object} utils.Resp
+// @Security    Authorization
 // @Router		/api/auth/{id} [get]
 func Info(c *fiber.Ctx) error {
 	var user models.ResponseUser

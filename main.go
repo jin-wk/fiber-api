@@ -16,6 +16,9 @@ import (
 // @contact.email note@kakao.com
 // @host          localhost:5000
 // @BasePath      /
+// @securityDefinitions.apiKey Authorization
+// @in header
+// @name Authorization
 func main() {
 	if err := database.InitDatabase(); err != nil {
 		log.Panic("Can't Connect Database: ", err.Error())
