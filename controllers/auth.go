@@ -1,4 +1,4 @@
-package controller
+package controllers
 
 import (
 	"time"
@@ -18,11 +18,11 @@ import (
 // @Accept		application/json
 // @Produce		application/json
 // @Param		user body models.RegisterUser true "user"
-// @Success		201 {object} utils.Resp
-// @Failure		500 {object} utils.Resp
+// @Success		201 {object} response
 // @Router		/api/auth/register [post]
 func Register(c *fiber.Ctx) error {
-	user := new(models.RegisterUser)
+	var user models.RegisterUser
+	var res models.ResponseUser
 
 	if err := c.BodyParser(&user); err != nil {
 		return utils.Response(c, 400, "Bad Request", err)
@@ -33,15 +33,16 @@ func Register(c *fiber.Ctx) error {
 		return utils.Response(c, 400, "Bad Request", err)
 	}
 
-	if database.DB.Model(user).Where("email = ?", user.Email).First(&user).Error == nil {
-		return utils.Response(c, 409, "Email Already Exists", nil)
+	if database.DB.Where("email = ?", user.Email).First(&user).Error == nil {
+		return utils.Response(c, 409, "The email already exists", nil)
 	}
 
 	if database.DB.Select("email", "password", "name").Create(&user).Error != nil {
-		return utils.Response(c, 500, "Internal Server Error", nil)
+		return utils.Response(c, 500, "Internal server error", nil)
 	}
 
-	return utils.Response(c, 201, "Created", &user)
+	database.DB.Where("email = ?", user.Email).First(&res)
+	return c.Status(fiber.StatusCreated).JSON(&res)
 }
 
 // Login godoc
