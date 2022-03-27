@@ -78,7 +78,7 @@ func Login(c *fiber.Ctx) error {
 		return utils.Response(c, 500, "Internal Server Error", nil)
 	}
 
-	return utils.Response(c, 200, "OK", map[string]interface{}{
+	return utils.Response(c, 200, "OK", fiber.Map{
 		"ID":    responseUser.ID,
 		"Email": responseUser.Email,
 		"Name":  responseUser.Name,
