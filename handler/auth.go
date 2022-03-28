@@ -68,8 +68,8 @@ func Register(c *fiber.Ctx) error {
 // @Summary     Login
 // @Description Login User
 // @Tags		Auth
-// @Accept		application/json
-// @Produce		application/json
+// @Accept		json
+// @Produce		json
 // @Param		user body models.Login true "user"
 // @Router		/api/auth/login [post]
 func Login(c *fiber.Ctx) error {
