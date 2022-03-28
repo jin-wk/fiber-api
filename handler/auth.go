@@ -35,18 +35,18 @@ func Register(c *fiber.Ctx) error {
 		})
 	}
 
-	err := utils.Validate(register)
-	if err != nil {
+	validate := utils.Validate(&register)
+	if validate != nil {
 		return c.Status(400).JSON(&fiber.Map{
 			"message": "Bad Request",
-			"data":    err,
+			"data":    validate,
 		})
 	}
 
 	if database.DB.Table("users").Where("email = ?", register.Email).First(&register).Error == nil {
 		return c.Status(409).JSON(&fiber.Map{
 			"message": "Email already exists",
-			"data":    err,
+			"data":    nil,
 		})
 	}
 
@@ -84,6 +84,14 @@ func Login(c *fiber.Ctx) error {
 		return c.Status(400).JSON(&fiber.Map{
 			"message": "Bad Request",
 			"data":    nil,
+		})
+	}
+
+	validate := utils.Validate(&login)
+	if validate != nil {
+		return c.Status(400).JSON(&fiber.Map{
+			"message": "Bad Request",
+			"data":    validate,
 		})
 	}
 
