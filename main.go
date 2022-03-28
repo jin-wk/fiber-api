@@ -23,7 +23,9 @@ func main() {
 	if err := database.InitDatabase(); err != nil {
 		log.Panic("Can't Connect Database: ", err.Error())
 	}
-	app := fiber.New(fiber.Config{})
+	app := fiber.New(fiber.Config{
+		Prefork: true,
+	})
 	routes.InitRoute(app)
 	log.Fatal(app.Listen(":5000"))
 }

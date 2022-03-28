@@ -10,7 +10,6 @@ import (
 	_ "github.com/jin-wk/fiber-api/docs"
 	"github.com/jin-wk/fiber-api/handler"
 	"github.com/jin-wk/fiber-api/middleware"
-	"github.com/jin-wk/fiber-api/utils"
 )
 
 func InitRoute(app *fiber.App) {
@@ -24,7 +23,10 @@ func InitRoute(app *fiber.App) {
 	api.Use(jwtware.New(jwtware.Config{
 		SigningKey: []byte(config.Env("JWT_SECRET_KEY")),
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			return utils.Response(c, 401, "Unauthorized", nil)
+			return c.Status(401).JSON(&fiber.Map{
+				"message": "Unauthorized",
+				"data":    nil,
+			})
 		},
 	}))
 	api.Get("/auth/:id", handler.Info)
