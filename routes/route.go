@@ -7,8 +7,8 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	jwtware "github.com/gofiber/jwt/v3"
 	"github.com/jin-wk/fiber-api/config"
-	"github.com/jin-wk/fiber-api/controllers"
 	_ "github.com/jin-wk/fiber-api/docs"
+	"github.com/jin-wk/fiber-api/handler"
 	"github.com/jin-wk/fiber-api/middleware"
 	"github.com/jin-wk/fiber-api/utils"
 )
@@ -18,8 +18,8 @@ func InitRoute(app *fiber.App) {
 	app.Get("/docs/*", fiberSwagger.Handler)
 
 	api := app.Group("/api", logger.New(middleware.LoggerConfig()))
-	api.Post("/auth/register", controllers.Register)
-	api.Post("/auth/login", controllers.Login)
+	api.Post("/auth/register", handler.Register)
+	api.Post("/auth/login", handler.Login)
 
 	api.Use(jwtware.New(jwtware.Config{
 		SigningKey: []byte(config.Env("JWT_SECRET_KEY")),
@@ -27,5 +27,5 @@ func InitRoute(app *fiber.App) {
 			return utils.Response(c, 401, "Unauthorized", nil)
 		},
 	}))
-	api.Get("/auth/:id", controllers.Info)
+	api.Get("/auth/:id", handler.Info)
 }
