@@ -78,6 +78,7 @@ func Login(c *fiber.Ctx) error {
 		ID    int    `json:"id"`
 		Email string `json:"email"`
 		Name  string `json:"name"`
+		Token string `json:"token"`
 	}
 
 	if err := c.BodyParser(&login); err != nil {
@@ -108,22 +109,11 @@ func Login(c *fiber.Ctx) error {
 		"exp":  time.Now().Add(duration).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	t, err := token.SignedString([]byte(config.Env("JWT_SECRET_KEY")))
-	if err != nil {
-		return c.Status(500).JSON(&fiber.Map{
-			"message": "Internal Server Error",
-			"data":    nil,
-		})
-	}
+	user.Token, _ = token.SignedString([]byte(config.Env("JWT_SECRET_KEY")))
 
 	return c.JSON(&fiber.Map{
 		"message": "Ok",
-		"data": &fiber.Map{
-			"id":    user.ID,
-			"email": user.Email,
-			"name":  user.Name,
-			"token": t,
-		},
+		"data":    &user,
 	})
 }
 
