@@ -7,7 +7,7 @@ require (
 	github.com/go-playground/locales v0.14.0
 	github.com/go-playground/universal-translator v0.18.0
 	github.com/go-playground/validator/v10 v10.9.0
-	github.com/gofiber/fiber/v2 v2.29.0
+	github.com/gofiber/fiber/v2 v2.31.0
 	github.com/gofiber/jwt/v3 v3.2.8
 	github.com/golang-jwt/jwt/v4 v4.4.0
 	github.com/joho/godotenv v1.4.0

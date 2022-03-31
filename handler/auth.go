@@ -142,6 +142,7 @@ func Info(c *fiber.Ctx) error {
 			"data":    nil,
 		})
 	}
+
 	return c.JSON(&fiber.Map{
 		"message": "Ok",
 		"data":    &user,
