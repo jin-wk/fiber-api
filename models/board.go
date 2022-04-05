@@ -11,12 +11,14 @@ type Board struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-type Create struct {
+type CreateBoard struct {
+	Id      int    `json:"id"`
+	UserId  int    `json:"user_id"`
 	Title   string `json:"title" validate:"required"`
 	Content string `json:"content" validate:"required"`
 }
 
-type Update struct {
+type UpdateBoard struct {
 	Id      int    `json:"id" validate:"required"`
 	Title   string `json:"title" validate:"required"`
 	Content string `json:"content" validate:"required"`

@@ -75,7 +75,7 @@ func Register(c *fiber.Ctx) error {
 func Login(c *fiber.Ctx) error {
 	var login models.Login
 	var user struct {
-		ID    int    `json:"id"`
+		Id    int    `json:"id"`
 		Email string `json:"email"`
 		Name  string `json:"name"`
 		Token string `json:"token"`
@@ -105,6 +105,7 @@ func Login(c *fiber.Ctx) error {
 
 	duration, _ := time.ParseDuration(config.Env("JWT_EXPIRE_MIN") + "m")
 	claims := jwt.MapClaims{
+		"id":   user.Id,
 		"name": user.Name,
 		"exp":  time.Now().Add(duration).Unix(),
 	}

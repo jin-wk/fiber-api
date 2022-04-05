@@ -30,4 +30,5 @@ func InitRoute(app *fiber.App) {
 		},
 	}))
 	api.Get("/auth/:id", handler.Info)
+	api.Post("/boards", handler.CreateBoard)
 }
