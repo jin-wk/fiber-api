@@ -10,11 +10,6 @@ import (
 
 func CreateBoard(c *fiber.Ctx) error {
 	var create models.CreateBoard
-	// var board struct {
-	// 	Id      int
-	// 	Title   string
-	// 	Content string
-	// }
 
 	if err := c.BodyParser(&create); err != nil {
 		return c.Status(400).JSON(&fiber.Map{
