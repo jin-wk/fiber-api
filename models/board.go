@@ -12,8 +12,8 @@ type Board struct {
 }
 
 type CreateBoard struct {
-	Id      int    `json:"id"`
-	UserId  int    `json:"user_id"`
+	Id      int    `json:"-"`
+	UserId  int    `json:"-"`
 	Title   string `json:"title" validate:"required"`
 	Content string `json:"content" validate:"required"`
 }

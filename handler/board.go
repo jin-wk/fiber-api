@@ -8,6 +8,15 @@ import (
 	"github.com/jin-wk/fiber-api/utils"
 )
 
+// Register godoc
+// @Summary     Create
+// @Description Create Board
+// @Tags		Board
+// @Accept		json
+// @Produce		json
+// @Param		user body models.CreateBoard true "board"
+// @Security    Authorization
+// @Router		/api/boards [post]
 func CreateBoard(c *fiber.Ctx) error {
 	var create models.CreateBoard
 
